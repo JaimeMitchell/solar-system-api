@@ -32,15 +32,10 @@ def handle_planets():
         ))
     return jsonify(results_list)
 
+
 @bp.route("/<planet_id>", methods=['GET'])
 def handle_planet(planet_id):
     planet_id = int(planet_id)
     for planet in planets:
         if planet.id == planet_id:
-            return {
-                "id": planet.id,
-                "name": planet.name,
-                "description": planet.description,
-                "temperature": planet.temperature
-            }
-    pass
+            return dict(id=planet.id, name=planet.name, temperature=planet.temperature)

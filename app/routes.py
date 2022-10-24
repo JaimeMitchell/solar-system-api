@@ -1,4 +1,5 @@
-from flask import Blueprint, jsonify
+from flask import Blueprint, jsonify, abort, make_response
+import json
 
 
 class Planet:
@@ -7,7 +8,12 @@ class Planet:
         self.name = name
         self.description = description
         self.temperature = temperature
-
+    def to_planet_dict(self):
+        return dict(
+            id=self.id,
+            name=self.name,
+            temperature=self.temperature
+        )
 
 planets = [
     Planet(1, "Venus", "yellow-white", "1000F"),
@@ -17,6 +23,16 @@ planets = [
 
 bp = Blueprint("planets", __name__, url_prefix="/planets")  # ENDPOINT
 
+def validate_planet(planet_id):
+    try:
+        planet_id = int(planet_id)
+    except:
+        abort(make_response({"message":f"planet{planet_id} not valid"},400))
+    for planet in planets:
+        if planet.id == planet_id:
+            return planet
+    return abort(make_response({"message": f"planet{planet_id} not found"}, 404))
+    
 
 @bp.route("", methods=["GET"])  # CRUD METHOD created a new endpoint that catches requests going to "" (assumed
 # "/books") with the HTTP method GET
@@ -24,38 +40,11 @@ bp = Blueprint("planets", __name__, url_prefix="/planets")  # ENDPOINT
 def handle_planets():
     results_list = []
     for planet in planets:
-        results_list.append(dict(
-            id=planet.id,
-            name=planet.name,
-            temperature=planet.temperature
-        ))
+        results_list.append(planet.to_planet_dict())
     return jsonify(results_list)
+    
+@bp.route("/<planet_id>", methods=["GET"])
+def get_planet(planet_id):
+    planet = validate_planet(planet_id)
+    return jsonify(planet.to_planet_dict())
 
-#from flask import Blueprint, jsonify
-
-# class Cat:
-#     def __init__(self, id, name, color, personality):
-#         self.id = id
-#         self.name = name
-#         self.color = color
-#         self.personality = personality
-
-# cats = [
-#     Cat(1, "Luna", "grey", "naughty"),
-#     Cat(2, "Orange Cat", "orange", "antagonistic"),
-#     Cat(3, "Big Ears", "grey and white", "sleepy")
-# ]
-
-# bp = Blueprint("cats", __name__, url_prefix="/cats")
-
-# @bp.route("", methods=["GET"])
-# def handle_cats():
-#     results_list = []
-#     for cat in cats:
-#         results_list.append(dict(
-#             id=cat.id,
-#             name=cat.name,
-#             color=cat.color,
-#             personality=cat.personality
-#         ))
-#     return jsonify(results_list)

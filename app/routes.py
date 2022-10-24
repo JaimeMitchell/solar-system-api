@@ -8,6 +8,14 @@ class Planet:
         self.description = description
         self.temperature = temperature
 
+    def to_planet_dict(self):
+        return dict(
+            id=self.id,
+            name=self.name,
+            description=self.description,
+            temperature=self.temperature
+        )
+
 
 planets = [
     Planet(1, "Venus", "yellow-white", "1000F"),
@@ -25,11 +33,7 @@ bp = Blueprint("planets", __name__, url_prefix="/planets")  # ENDPOINT
 def handle_planets():
     results_list = []
     for planet in planets:
-        results_list.append(dict(
-            id=planet.id,
-            name=planet.name,
-            temperature=planet.temperature
-        ))
+        results_list.append(planet.to_planet_dict())
     return jsonify(results_list)
 
 
@@ -39,9 +43,11 @@ def validate_planet(planet_id):
     except:
         abort(make_response(
             {"message": f"planet {planet_id} is not valid"}, 400))
+
     for planet in planets:
         if planet.id == planet_id:
             return(planet)
+
     abort(make_response(
         {"message": f"planet {planet_id} does not exist"}, 404))
 
@@ -49,4 +55,4 @@ def validate_planet(planet_id):
 @bp.route("/<planet_id>", methods=['GET'])
 def handle_planet(planet_id):
     planet = validate_planet(planet_id)
-    return dict(id=planet.id, name=planet.name, temperature=planet.temperature)
+    return jsonify(planet.to_planet_dict())

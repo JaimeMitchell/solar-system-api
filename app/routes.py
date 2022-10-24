@@ -1,4 +1,5 @@
 from flask import Blueprint, jsonify, abort, make_response
+import json
 
 
 class Planet:
@@ -7,7 +8,6 @@ class Planet:
         self.name = name
         self.description = description
         self.temperature = temperature
-
     def to_planet_dict(self):
         return dict(
             id=self.id,
@@ -23,36 +23,29 @@ planets = [
     Planet(3, "Mars", "red", "300F")
 ]
 
-bp = Blueprint("planets", __name__, url_prefix="/planets")  # ENDPOINT
-
-
-# CRUD METHOD created a new endpoint that catches requests going to "" (assumed
-@bp.route("", methods=["GET"])
-# "/books") with the HTTP method GET
-# RESPONSE BODY
-def handle_planets():
-    results_list = []
-    for planet in planets:
-        results_list.append(planet.to_planet_dict())
-    return jsonify(results_list)
-
+bp = Blueprint("planets", __name__, url_prefix="/planets") 
 
 def validate_planet(planet_id):
     try:
         planet_id = int(planet_id)
     except:
-        abort(make_response(
-            {"message": f"planet {planet_id} is not valid"}, 400))
-
+        abort(make_response({"message":f"planet{planet_id} not valid"},400))
     for planet in planets:
         if planet.id == planet_id:
-            return(planet)
+            return planet
+    return abort(make_response({"message": f"planet{planet_id} not found"}, 404))
+    
 
-    abort(make_response(
-        {"message": f"planet {planet_id} does not exist"}, 404))
+@bp.route("", methods=["GET"])
 
-
-@bp.route("/<planet_id>", methods=['GET'])
-def handle_planet(planet_id):
+def handle_planets():
+    results_list = []
+    for planet in planets:
+        results_list.append(planet.to_planet_dict())
+    return jsonify(results_list)
+    
+@bp.route("/<planet_id>", methods=["GET"])
+def get_planet(planet_id):
     planet = validate_planet(planet_id)
     return jsonify(planet.to_planet_dict())
+

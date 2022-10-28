@@ -19,9 +19,10 @@ class Planet:
 
 
 planets = [
-    Planet(1, "Venus", "yellow-white", "1000F"),
-    Planet(2, "Earth", "blue-green", "70F"),
-    Planet(3, "Mars", "red", "300F")
+    Planet(1, 'Mercury', 'Grey', '333˚F(167˚C)'),
+    Planet(2, 'Venus', 'yellow-white', '967˚F(15°C)'),
+    Planet(3, 'Earth', 'blue-green', '59˚F(15°C)'),
+    Planet(4, 'Mars', 'red', '-85˚F(-65˚C')
 ]
 
 bp = Blueprint("planets", __name__, url_prefix="/planets")

@@ -7,7 +7,7 @@ def test_get_all_planets_with_no_records(client):
     assert response_body == []
 
 def test_get_all_planets(client,two_saved_planets):
-     # Act
+    # Act
     response = client.get("/planets")
     response_body = response.get_json()
     # Assert
@@ -24,9 +24,9 @@ def test_get_one_planet(client,two_saved_planets):
     assert response.status_code == 200
     assert response_body == {
         "id": 1,
-       "name":"Ocean Planet", 
-       "description": "watr 4evr planet", 
-       "temperature" : 1000}
+        "name":"Ocean Planet", 
+        "description": "watr 4evr planet", 
+        "temperature" : 1000}
 
 def test_get_one_planet_no_fixture(client):
     # Act
@@ -38,9 +38,9 @@ def test_get_one_planet_no_fixture(client):
 def test_create_one_planet(client):
     # Act
     response = client.post("/planets", json={
-       "name":"Ocean Planet", 
-       "description": "watr 4evr planet", 
-       "temperature" : 1000}
+        "name":"Ocean Planet", 
+        "description": "watr 4evr planet", 
+        "temperature" : 1000}
     )
     response_body = response.get_json()
 

@@ -76,7 +76,7 @@ def update_planet(id):
     planet.temperature = request_body["temperature"]
 
     db.session.commit()
-    return make_response(f"Planet #{planet.id} successfully updated", 200)
+    return make_response(jsonify(f"Planet #{planet.id} successfully updated"), 200)
 
 
 @planets_bp.route("/<id>", methods=["DELETE"])
@@ -85,4 +85,4 @@ def delete_planet(id):
     planet = validate_model(Planet, id)
     db.session.delete(planet)
     db.session.commit()
-    return make_response(f"Planet #{planet.id} successfully deleted", 200)
+    return make_response(jsonify(f"Planet #{planet.id} successfully deleted"), 200)

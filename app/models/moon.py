@@ -6,7 +6,9 @@ class Moon(db.Model):  # The class Planet inherits from db.Model from SQLAlchemy
     name = db.Column(db.String, nullable=False)
     description = db.Column(db.String, nullable=False)
     temperature = db.Column(db.Integer, nullable=False)
-    planet = db.relationship("Planet", back_populates="moon")
+    planet_id = db.Column(db.Integer, db.ForeignKey('planet.id'))
+    planet = db.relationship("Planet", back_populates="moons")
+
     @classmethod
     def from_dict(cls,data_dict):
         return cls(name=data_dict["name"], description=data_dict["description"], temperature=data_dict["temperature"])

@@ -43,7 +43,7 @@ def read_all_planets():
     planet_query = Planet.query  # like SELECT * from planets
 
     if name_query:
-        planet_query = planet_query.filter_by(name=name_query)  # ask Isabella
+        planet_query = planet_query.filter_by(name=name_query)  
 
     if description_query:
         planet_query = planet_query.filter_by(description=description_query)
@@ -86,3 +86,5 @@ def delete_planet(id):
     db.session.delete(planet)
     db.session.commit()
     return make_response(jsonify(f"Planet #{planet.id} successfully deleted"), 200)
+
+

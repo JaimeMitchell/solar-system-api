@@ -1,14 +1,14 @@
 from app import db
 
 
-class Planet(db.Model):  # The class Planet inherits from db.Model from SQLAlchemy
+class Moon(db.Model):  # The class Planet inherits from db.Model from SQLAlchemy
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String, nullable=False)
     description = db.Column(db.String, nullable=False)
     temperature = db.Column(db.Integer, nullable=False)
-    moons = db.relationship("Moon", back_populates="planet")
+    planet = db.relationship("Planet", back_populates="moon")
     @classmethod
-    def from_dict(cls, data_dict):
+    def from_dict(cls,data_dict):
         return cls(name=data_dict["name"], description=data_dict["description"], temperature=data_dict["temperature"])
 
     def to_dict(self):
@@ -18,4 +18,3 @@ class Planet(db.Model):  # The class Planet inherits from db.Model from SQLAlche
             description=self.description,
             temperature=self.temperature
         )
-    
